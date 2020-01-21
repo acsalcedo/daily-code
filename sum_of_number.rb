@@ -13,5 +13,5 @@ def array_includes_sum_of_number?(array, number)
 end
 
 array = [10, 15, 3, 7]
-number = 27
+number = 17
 array_includes_sum_of_number?(array, number)
