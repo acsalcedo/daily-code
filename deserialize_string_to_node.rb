@@ -20,14 +20,10 @@ def serialize(node)
     break if queue.size <= 0
     current = queue.shift
 
-    if current.nil?
-      string += 'null,'
-      next
-    end
+    string += "#{current&.value},"
+    next if current.nil?
 
-    queue << current.left
-    queue << current.right
-    string += "#{current.value},"
+    queue += [current.left, current.right]
   end
 
   string
@@ -35,7 +31,7 @@ end
 
 
 def deserialize(string)
-  string_queue = string.split(',')
+  string_queue = string.split(',', -1)
   tree = Node.new(value: string_queue.shift)
   queue = []
   queue << tree
@@ -48,17 +44,17 @@ def deserialize(string)
     left = string_queue.shift
     right = string_queue.shift
 
-    left_node = left == 'null' ? nil : Node.new(value: left)
-    queue << left_node unless left_node.nil?
-
-    right_node = right == 'null' ? nil : Node.new(value: right)
-    queue << right_node unless right_node.nil?
-
-    current.left = left_node
-    current.right = right_node
+    current.left = create_node(left, queue)
+    current.right = create_node(right, queue)
   end
 
   tree
+end
+
+def create_node(node_value, queue)
+  new_node = node_value.empty? ? nil : Node.new(value: node_value)
+  queue << new_node unless new_node.nil?
+  new_node
 end
 
 # CASE 1
